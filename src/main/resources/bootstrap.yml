@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: exercise
+  cloud:
+    config:
+      uri: http://localhost:8888
