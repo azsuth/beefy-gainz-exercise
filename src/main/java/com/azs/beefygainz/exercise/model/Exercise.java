@@ -1,16 +1,16 @@
 package com.azs.beefygainz.exercise.model;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.Lob;
 
-@Entity
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
+@Entity
 public class Exercise extends BaseEntity {
 
     private String name;
