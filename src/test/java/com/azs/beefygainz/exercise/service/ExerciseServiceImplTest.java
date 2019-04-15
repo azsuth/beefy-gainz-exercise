@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,5 +55,7 @@ public class ExerciseServiceImplTest {
         assertNotNull(exercise);
         verify(exerciseRepositoryMock).save(any());
         verify(exerciseSpy).setUserId("asdf");
+        verify(exerciseSpy).setCreated(any(LocalDateTime.class));
+        verify(exerciseSpy).setUpdated(any(LocalDateTime.class));
     }
 }

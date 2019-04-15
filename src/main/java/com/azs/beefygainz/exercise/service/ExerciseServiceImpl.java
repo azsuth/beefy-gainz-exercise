@@ -5,6 +5,7 @@ import com.azs.beefygainz.exercise.repository.ExerciseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +31,8 @@ public class ExerciseServiceImpl implements ExerciseService {
     @Override
     public Exercise save(Exercise exercise, String userId) {
         exercise.setUserId(userId);
+        exercise.setCreated(LocalDateTime.now());
+        exercise.setUpdated(LocalDateTime.now());
         return exerciseRepository.save(exercise);
     }
 }
