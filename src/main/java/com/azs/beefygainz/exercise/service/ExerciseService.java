@@ -5,9 +5,7 @@ import com.azs.beefygainz.exercise.model.Exercise;
 import java.util.List;
 
 public interface ExerciseService {
-    List<Exercise> findAllByUserId(long userId);
+    List<Exercise> findAllByUserId(String userId);
 
-    Exercise save(Exercise exercise);
-
-    Exercise findById(long id);
+    Exercise save(Exercise exercise, String userId);
 }
