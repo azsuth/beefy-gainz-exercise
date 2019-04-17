@@ -52,7 +52,7 @@ public class ExerciseControllerTest {
 
         when(exerciseServiceMock.findAllByUserId(anyString())).thenReturn(exercises);
 
-        mockMvc.perform(get("/exercises").header("Auth-Token", "asdf"))
+        mockMvc.perform(get("/exercises").header("userId", "asdf"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].name", is("Bench Press")))
@@ -69,7 +69,7 @@ public class ExerciseControllerTest {
 
         mockMvc.perform(post("/exercises")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("Auth-Token", "asdf")
+                .header("userId", "asdf")
                 .content(asJsonString(mockExercise)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name", is("Bench Press")));

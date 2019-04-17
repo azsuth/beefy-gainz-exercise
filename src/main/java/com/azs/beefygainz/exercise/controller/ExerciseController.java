@@ -20,13 +20,13 @@ public class ExerciseController {
     }
 
     @GetMapping("")
-    public List<Exercise> getExercises(@RequestHeader("Auth-Token") String userId) {
+    public List<Exercise> getExercises(@RequestHeader("userId") String userId) {
         return exerciseService.findAllByUserId(userId);
     }
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
-    public Exercise saveExercise(@RequestHeader("Auth-Token") String userId, @RequestBody Exercise exercise) {
+    public Exercise saveExercise(@RequestHeader("userId") String userId, @RequestBody Exercise exercise) {
         return exerciseService.save(exercise, userId);
     }
 }
