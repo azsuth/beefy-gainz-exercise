@@ -43,10 +43,4 @@ public class ExerciseController {
     public void deleteExercise(@RequestHeader("userId") String userId, @PathVariable Long exerciseId) {
         exerciseService.delete(exerciseId, userId);
     }
-
-    @PostMapping("/{exerciseId}/sets")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Set saveSet(@RequestHeader("userId") String userId, @RequestBody Set set, @PathVariable Long exerciseId) {
-        return setService.save(set, exerciseId);
-    }
 }

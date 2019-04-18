@@ -44,8 +44,7 @@ public class ExerciseServiceImpl implements ExerciseService {
 
     @Override
     public Exercise update(Long exerciseId, Exercise exercise, String userId) {
-        Exercise savedExercise = exerciseRepository.findByIdAndUserId(exerciseId, userId)
-                .orElseThrow(() -> new NoSuchExerciseException(exerciseId, userId));
+        Exercise savedExercise = getSavedExercise(exerciseId, userId);
 
         savedExercise.setName(exercise.getName());
         savedExercise.setNotes(exercise.getNotes());
@@ -56,9 +55,12 @@ public class ExerciseServiceImpl implements ExerciseService {
 
     @Override
     public void delete(Long exerciseId, String userId) {
-        Exercise savedExercise = exerciseRepository.findByIdAndUserId(exerciseId, userId)
-                .orElseThrow(() -> new NoSuchExerciseException(exerciseId, userId));
+        exerciseRepository.delete(getSavedExercise(exerciseId, userId));
+    }
 
-        exerciseRepository.delete(savedExercise);
+    @Override
+    public Exercise getSavedExercise(Long exerciseId, String userId) {
+        return exerciseRepository.findByIdAndUserId(exerciseId, userId)
+                .orElseThrow(() -> new NoSuchExerciseException(exerciseId, userId));
     }
 }

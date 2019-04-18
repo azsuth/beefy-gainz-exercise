@@ -12,4 +12,6 @@ public interface ExerciseService {
     Exercise update(Long exerciseId, Exercise exercise, String userId);
 
     void delete(Long exerciseId, String userId);
+
+    Exercise getSavedExercise(Long exerciseId, String userId);
 }

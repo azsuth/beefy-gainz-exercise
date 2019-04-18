@@ -5,6 +5,6 @@ import java.util.NoSuchElementException;
 public class NoSuchExerciseException extends NoSuchElementException {
 
     public NoSuchExerciseException(Long exerciseId, String userId) {
-        super(String.format("No exercise found with exercise ID %d for user ID %s", exerciseId, userId));
+        super(String.format("No exercise found with ID %d for user ID %s", exerciseId, userId));
     }
 }

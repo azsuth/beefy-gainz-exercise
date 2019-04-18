@@ -107,20 +107,4 @@ public class ExerciseControllerTest {
 
         verify(exerciseServiceMock).delete(eq(EXERCISE_ID), eq(USER_ID));
     }
-
-    @Test
-    public void saveSet() throws Exception {
-        Set set = Set.builder().reps(12).build();
-
-        when(setServiceMock.save(any(), any())).thenReturn(set);
-
-        mockMvc.perform(post("/exercises/1/sets")
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("userId", USER_ID)
-                .content(asJsonString(set)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.reps", is(12)));
-
-        verify(setServiceMock).save(any(), eq(EXERCISE_ID));
-    }
 }

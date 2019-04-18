@@ -120,8 +120,28 @@ public class ExerciseServiceImplTest {
 
     @Test
     public void delete() {
+        when(exerciseRepositoryMock.findByIdAndUserId(any(), any()))
+                .thenReturn(Optional.of(Exercise.builder().build()));
+
         exerciseService.delete(EXERCISE_ID, USER_ID);
 
         verify(exerciseRepositoryMock).delete(any());
+    }
+
+    @Test(expected = NoSuchExerciseException.class)
+    public void getSavedExercise_doesntExist() {
+        when(exerciseRepositoryMock.findByIdAndUserId(any(), any())).thenReturn(Optional.empty());
+
+        exerciseService.getSavedExercise(EXERCISE_ID, USER_ID);
+    }
+
+    @Test
+    public void getSavedExercise() {
+        when(exerciseRepositoryMock.findByIdAndUserId(any(), any()))
+                .thenReturn(Optional.of(Exercise.builder().build()));
+
+        exerciseService.getSavedExercise(EXERCISE_ID, USER_ID);
+
+        verify(exerciseRepositoryMock).findByIdAndUserId(eq(EXERCISE_ID), eq(USER_ID));
     }
 }
