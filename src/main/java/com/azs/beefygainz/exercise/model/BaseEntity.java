@@ -1,6 +1,6 @@
 package com.azs.beefygainz.exercise.model;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,11 +10,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @MappedSuperclass
 public class BaseEntity {
 
@@ -27,5 +27,9 @@ public class BaseEntity {
 
     public BaseEntity(Long id) {
         this.id = id;
+    }
+
+    public Long getId() {
+        return Optional.ofNullable(id).orElse(-1L);
     }
 }
