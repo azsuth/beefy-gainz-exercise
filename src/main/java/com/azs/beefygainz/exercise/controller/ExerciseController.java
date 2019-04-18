@@ -30,8 +30,13 @@ public class ExerciseController {
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
-    public Exercise saveExercise(@RequestHeader("userId") String userId, @RequestBody Exercise exercise) {
+    public Exercise createExercise(@RequestHeader("userId") String userId, @RequestBody Exercise exercise) {
         return exerciseService.create(exercise, userId);
+    }
+
+    @PutMapping("/{exerciseId}")
+    public Exercise updateExercise(@RequestHeader("userId") String userId, @PathVariable Long exerciseId, @RequestBody Exercise exercise) {
+        return exerciseService.update(exerciseId, exercise, userId);
     }
 
     @PostMapping("/{exerciseId}/sets")

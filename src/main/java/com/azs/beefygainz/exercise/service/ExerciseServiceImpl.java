@@ -38,13 +38,13 @@ public class ExerciseServiceImpl implements ExerciseService {
 
             return exerciseRepository.save(exercise);
         } else {
-            return update(exercise, userId);
+            return update(exercise.getId(), exercise, userId);
         }
     }
 
     @Override
-    public Exercise update(Exercise exercise, String userId) {
-        Exercise savedExercise = exerciseRepository.findByIdAndUserId(exercise.getId(), userId)
+    public Exercise update(Long exerciseId, Exercise exercise, String userId) {
+        Exercise savedExercise = exerciseRepository.findByIdAndUserId(exerciseId, userId)
                 .orElseThrow(() -> new NoSuchExerciseException(exercise.getId()));
 
         savedExercise.setName(exercise.getName());

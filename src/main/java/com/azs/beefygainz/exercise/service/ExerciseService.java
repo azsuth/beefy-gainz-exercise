@@ -9,5 +9,5 @@ public interface ExerciseService {
 
     Exercise create(Exercise exercise, String userId);
 
-    Exercise update(Exercise exercise, String userId);
+    Exercise update(Long exerciseId, Exercise exercise, String userId);
 }

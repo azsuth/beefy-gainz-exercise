@@ -73,7 +73,7 @@ public class ExerciseServiceImplTest {
 
         exerciseServiceSpy.create(exercise, USER_ID);
 
-        verify(exerciseServiceSpy).update(eq(exercise), eq(USER_ID));
+        verify(exerciseServiceSpy).update(eq(EXERCISE_ID), eq(exercise), eq(USER_ID));
     }
 
     @Test(expected = NoSuchExerciseException.class)
@@ -82,7 +82,7 @@ public class ExerciseServiceImplTest {
 
         when(exerciseRepositoryMock.findByIdAndUserId(EXERCISE_ID, USER_ID)).thenReturn(Optional.empty());
 
-        exerciseService.update(exercise, USER_ID);
+        exerciseService.update(EXERCISE_ID, exercise, USER_ID);
     }
 
     @Test
@@ -99,7 +99,7 @@ public class ExerciseServiceImplTest {
                 .thenReturn(Optional.of(exerciseSpy));
         when(exerciseRepositoryMock.save(exerciseSpy)).thenReturn(exerciseSpy);
 
-        Exercise updatedExercise = exerciseService.update(exercise, USER_ID);
+        Exercise updatedExercise = exerciseService.update(EXERCISE_ID, exercise, USER_ID);
 
         assertEquals(EXERCISE_NAME, updatedExercise.getName());
         assertEquals(EXERCISE_NOTES, updatedExercise.getNotes());
