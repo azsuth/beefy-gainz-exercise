@@ -51,7 +51,7 @@ public class ExerciseServiceImplTest {
 
     @Test
     public void save() {
-        Exercise exerciseSpy = spy(Exercise.builder().name("Bench Press").sets(new ArrayList<>()).build());
+        Exercise exerciseSpy = spy(Exercise.builder().name("Bench Press").build());
 
         when(exerciseRepositoryMock.save(any())).thenReturn(exerciseSpy);
 
@@ -64,7 +64,7 @@ public class ExerciseServiceImplTest {
 
     @Test
     public void saveNew() {
-        Exercise exerciseSpy = spy(Exercise.builder().name("Bench Press").sets(new ArrayList<>()).build());
+        Exercise exerciseSpy = spy(Exercise.builder().name("Bench Press").build());
 
         exerciseService.save(exerciseSpy, "asdf");
 
@@ -74,7 +74,7 @@ public class ExerciseServiceImplTest {
 
     @Test
     public void saveExisting() {
-        Exercise exerciseSpy = spy(Exercise.builder().name("Bench Press").sets(new ArrayList<>()).build());
+        Exercise exerciseSpy = spy(Exercise.builder().id(1L).name("Bench Press").build());
 
         when(exerciseRepositoryMock.findById(any())).thenReturn(Optional.of(Exercise.builder().build()));
 
@@ -86,7 +86,7 @@ public class ExerciseServiceImplTest {
 
     @Test
     public void saveNewSet() {
-        Exercise exercise = Exercise.builder().name("Bench Press").sets(new ArrayList<>()).build();
+        Exercise exercise = Exercise.builder().name("Bench Press").build();
         exercise.addSet(Set.builder().reps(5).lbs(135).build());
         exercise.addSet(Set.builder().reps(5).lbs(135).build());
 
@@ -101,7 +101,7 @@ public class ExerciseServiceImplTest {
 
     @Test
     public void saveExistingSet() {
-        Exercise exercise = Exercise.builder().name("Bench Press").sets(new ArrayList<>()).build();
+        Exercise exercise = Exercise.builder().name("Bench Press").build();
 
         Set set1 = spy(Set.builder().build());
         Set set2 = spy(Set.builder().build());

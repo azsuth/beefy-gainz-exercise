@@ -24,4 +24,8 @@ public class BaseEntity {
 
     private LocalDateTime created;
     private LocalDateTime updated;
+
+    public BaseEntity(Long id) {
+        this.id = id;
+    }
 }

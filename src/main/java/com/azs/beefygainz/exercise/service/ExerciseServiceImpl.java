@@ -33,7 +33,7 @@ public class ExerciseServiceImpl implements ExerciseService {
 
     @Override
     public Exercise save(Exercise exercise, String userId) {
-        if (!exerciseRepository.findById(exercise.getId()).isPresent()) {
+        if (exercise.getId() == null || !exerciseRepository.findById(exercise.getId()).isPresent()) {
             exercise.setUserId(userId);
             exercise.setCreated(LocalDateTime.now());
         }

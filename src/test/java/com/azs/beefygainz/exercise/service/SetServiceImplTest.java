@@ -51,7 +51,7 @@ public class SetServiceImplTest {
 
     @Test
     public void saveExisting() {
-        Set setSpy = spy(Set.builder().build());
+        Set setSpy = spy(Set.builder().id(1L).build());
 
         when(exerciseRepositoryMock.findById(any())).thenReturn(Optional.of(Exercise.builder().build()));
         when(setRepositoryMock.findById(any())).thenReturn(Optional.of(Set.builder().build()));

@@ -1,7 +1,9 @@
 package com.azs.beefygainz.exercise.controller;
 
 import com.azs.beefygainz.exercise.model.Exercise;
+import com.azs.beefygainz.exercise.model.Set;
 import com.azs.beefygainz.exercise.service.ExerciseService;
+import com.azs.beefygainz.exercise.service.SetService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -31,6 +33,8 @@ public class ExerciseControllerTest {
 
     @Mock
     ExerciseService exerciseServiceMock;
+    @Mock
+    SetService setServiceMock;
 
     @InjectMocks
     ExerciseController exerciseController;
@@ -75,5 +79,21 @@ public class ExerciseControllerTest {
                 .andExpect(jsonPath("$.name", is("Bench Press")));
 
         verify(exerciseServiceMock).save(any(), eq("asdf"));
+    }
+
+    @Test
+    public void saveSet() throws Exception {
+        Set set = Set.builder().reps(12).build();
+
+        when(setServiceMock.save(any(), any())).thenReturn(set);
+
+        mockMvc.perform(post("/exercises/1/sets")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("userId", "asdf")
+                .content(asJsonString(set)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.reps", is(12)));
+
+        verify(setServiceMock).save(any(), eq(1L));
     }
 }
