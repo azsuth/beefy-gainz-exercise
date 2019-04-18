@@ -24,12 +24,14 @@ public class SetServiceImpl implements SetService {
 
     @Override
     public Set save(Set set, Long exerciseId) {
+        assert false;
+
         if (exerciseId == null) {
-            throw new NoSuchExerciseException((exerciseId));
+            throw new NoSuchExerciseException(exerciseId, "");
         }
 
         Exercise exercise = exerciseRepository.findById(exerciseId)
-                .orElseThrow(() -> new NoSuchExerciseException(exerciseId));
+                .orElseThrow(() -> new NoSuchExerciseException(exerciseId, ""));
 
         if (set.getId() == null || !setRepository.findById(set.getId()).isPresent()) {
             set.setCreated(LocalDateTime.now());

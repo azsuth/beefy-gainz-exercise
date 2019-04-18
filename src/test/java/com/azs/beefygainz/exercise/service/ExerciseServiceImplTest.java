@@ -110,4 +110,18 @@ public class ExerciseServiceImplTest {
         verify(exerciseSpy, times(0)).setCreated(any());
         verify(exerciseRepositoryMock).save(any());
     }
+
+    @Test(expected = NoSuchExerciseException.class)
+    public void delete_exerciseDoesntExist() {
+        when(exerciseRepositoryMock.findByIdAndUserId(any(), any())).thenReturn(Optional.empty());
+
+        exerciseService.delete(EXERCISE_ID, USER_ID);
+    }
+
+    @Test
+    public void delete() {
+        exerciseService.delete(EXERCISE_ID, USER_ID);
+
+        verify(exerciseRepositoryMock).delete(any());
+    }
 }

@@ -100,6 +100,15 @@ public class ExerciseControllerTest {
     }
 
     @Test
+    public void deleteExercise() throws Exception {
+        mockMvc.perform(delete("/exercises/1")
+                .header("userId", USER_ID))
+                .andExpect(status().isOk());
+
+        verify(exerciseServiceMock).delete(eq(EXERCISE_ID), eq(USER_ID));
+    }
+
+    @Test
     public void saveSet() throws Exception {
         Set set = Set.builder().reps(12).build();
 

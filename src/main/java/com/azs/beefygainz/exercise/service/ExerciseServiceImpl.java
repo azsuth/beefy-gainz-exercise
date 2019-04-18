@@ -45,12 +45,20 @@ public class ExerciseServiceImpl implements ExerciseService {
     @Override
     public Exercise update(Long exerciseId, Exercise exercise, String userId) {
         Exercise savedExercise = exerciseRepository.findByIdAndUserId(exerciseId, userId)
-                .orElseThrow(() -> new NoSuchExerciseException(exercise.getId()));
+                .orElseThrow(() -> new NoSuchExerciseException(exerciseId, userId));
 
         savedExercise.setName(exercise.getName());
         savedExercise.setNotes(exercise.getNotes());
         savedExercise.setUpdated(LocalDateTime.now());
 
         return exerciseRepository.save(savedExercise);
+    }
+
+    @Override
+    public void delete(Long exerciseId, String userId) {
+        Exercise savedExercise = exerciseRepository.findByIdAndUserId(exerciseId, userId)
+                .orElseThrow(() -> new NoSuchExerciseException(exerciseId, userId));
+
+        exerciseRepository.delete(savedExercise);
     }
 }

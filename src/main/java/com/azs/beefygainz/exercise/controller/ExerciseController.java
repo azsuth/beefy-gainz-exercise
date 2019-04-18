@@ -39,6 +39,11 @@ public class ExerciseController {
         return exerciseService.update(exerciseId, exercise, userId);
     }
 
+    @DeleteMapping("/{exerciseId}")
+    public void deleteExercise(@RequestHeader("userId") String userId, @PathVariable Long exerciseId) {
+        exerciseService.delete(exerciseId, userId);
+    }
+
     @PostMapping("/{exerciseId}/sets")
     @ResponseStatus(HttpStatus.CREATED)
     public Set saveSet(@RequestHeader("userId") String userId, @RequestBody Set set, @PathVariable Long exerciseId) {
