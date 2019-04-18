@@ -10,8 +10,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.RequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.ArrayList;
@@ -20,7 +18,6 @@ import java.util.List;
 import static com.azs.beefygainz.exercise.ExerciseApplicationTests.asJsonString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -69,7 +66,7 @@ public class ExerciseControllerTest {
     public void saveExercise() throws Exception {
         Exercise mockExercise = Exercise.builder().name("Bench Press").build();
 
-        when(exerciseServiceMock.save(any(), anyString())).thenReturn(mockExercise);
+        when(exerciseServiceMock.create(any(), anyString())).thenReturn(mockExercise);
 
         mockMvc.perform(post("/exercises")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -78,7 +75,7 @@ public class ExerciseControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name", is("Bench Press")));
 
-        verify(exerciseServiceMock).save(any(), eq("asdf"));
+        verify(exerciseServiceMock).create(any(), eq("asdf"));
     }
 
     @Test

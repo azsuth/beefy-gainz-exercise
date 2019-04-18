@@ -1,9 +1,8 @@
 package com.azs.beefygainz.exercise.service;
 
+import com.azs.beefygainz.exercise.exception.NoSuchExerciseException;
 import com.azs.beefygainz.exercise.model.Exercise;
-import com.azs.beefygainz.exercise.model.Set;
 import com.azs.beefygainz.exercise.repository.ExerciseRepository;
-import com.azs.beefygainz.exercise.repository.SetRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -13,19 +12,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class ExerciseServiceImplTest {
 
-    @Mock
-    ExerciseRepository exerciseRepositoryMock;
+    static final String USER_ID = "asdf";
+    static final Long EXERCISE_ID = 1L;
+    static final String EXERCISE_NAME = "Bench Press";
+    static final String EXERCISE_NOTES = "Notes";
 
     @Mock
-    SetRepository setRepositoryMock;
+    ExerciseRepository exerciseRepositoryMock;
 
     @InjectMocks
     ExerciseServiceImpl exerciseService;
@@ -43,77 +43,71 @@ public class ExerciseServiceImplTest {
 
         when(exerciseRepositoryMock.findAllByUserId(anyString())).thenReturn(mockExercises);
 
-        List<Exercise> exercises = exerciseService.findAllByUserId("asdf");
+        List<Exercise> exercises = exerciseService.findAllByUserId(USER_ID);
 
         assertEquals(2, exercises.size());
-        verify(exerciseRepositoryMock).findAllByUserId("asdf");
+        verify(exerciseRepositoryMock).findAllByUserId(USER_ID);
     }
 
     @Test
-    public void save() {
-        Exercise exerciseSpy = spy(Exercise.builder().name("Bench Press").build());
+    public void create() {
+        Exercise exerciseSpy = spy(Exercise.builder().build());
 
-        when(exerciseRepositoryMock.save(any())).thenReturn(exerciseSpy);
+        when(exerciseRepositoryMock.save(exerciseSpy)).thenReturn(exerciseSpy);
 
-        Exercise exercise = exerciseService.save(exerciseSpy, "asdf");
+        Exercise exercise = exerciseService.create(exerciseSpy, USER_ID);
 
         assertNotNull(exercise);
-        verify(exerciseRepositoryMock).save(any());
-        verify(exerciseSpy).setUserId("asdf");
-    }
-
-    @Test
-    public void saveNew() {
-        Exercise exerciseSpy = spy(Exercise.builder().name("Bench Press").build());
-
-        exerciseService.save(exerciseSpy, "asdf");
-
         verify(exerciseSpy).setCreated(any());
         verify(exerciseSpy).setUpdated(any());
+        verify(exerciseSpy).setUserId(eq(USER_ID));
     }
 
     @Test
-    public void saveExisting() {
-        Exercise exerciseSpy = spy(Exercise.builder().id(1L).name("Bench Press").build());
+    public void create_existing() {
+        Exercise exercise = Exercise.builder().id(EXERCISE_ID).build();
+        ExerciseServiceImpl exerciseServiceSpy = spy(exerciseService);
 
-        when(exerciseRepositoryMock.findById(any())).thenReturn(Optional.of(Exercise.builder().build()));
+        when(exerciseRepositoryMock.findByIdAndUserId(EXERCISE_ID, USER_ID))
+                .thenReturn(Optional.of(Exercise.builder().build()));
 
-        exerciseService.save(exerciseSpy, "asdf");
+        exerciseServiceSpy.create(exercise, USER_ID);
 
+        verify(exerciseServiceSpy).update(eq(exercise), eq(USER_ID));
+    }
+
+    @Test(expected = NoSuchExerciseException.class)
+    public void update_exerciseDoesntExist() {
+        Exercise exercise = Exercise.builder().userId(USER_ID).build();
+
+        when(exerciseRepositoryMock.findByIdAndUserId(EXERCISE_ID, USER_ID)).thenReturn(Optional.empty());
+
+        exerciseService.update(exercise, USER_ID);
+    }
+
+    @Test
+    public void update() {
+        Exercise exercise = Exercise.builder()
+                .id(EXERCISE_ID)
+                .name(EXERCISE_NAME)
+                .notes(EXERCISE_NOTES)
+                .build();
+
+        Exercise exerciseSpy = spy(Exercise.builder().build());
+
+        when(exerciseRepositoryMock.findByIdAndUserId(EXERCISE_ID, USER_ID))
+                .thenReturn(Optional.of(exerciseSpy));
+        when(exerciseRepositoryMock.save(exerciseSpy)).thenReturn(exerciseSpy);
+
+        Exercise updatedExercise = exerciseService.update(exercise, USER_ID);
+
+        assertEquals(EXERCISE_NAME, updatedExercise.getName());
+        assertEquals(EXERCISE_NOTES, updatedExercise.getNotes());
+
+        verify(exerciseSpy).setName(eq(EXERCISE_NAME));
+        verify(exerciseSpy).setNotes(eq(EXERCISE_NOTES));
+        verify(exerciseSpy).setUpdated(any());
         verify(exerciseSpy, times(0)).setCreated(any());
-        verify(exerciseSpy, times(1)).setUpdated(any());
-    }
-
-    @Test
-    public void saveNewSet() {
-        Exercise exercise = Exercise.builder().name("Bench Press").build();
-        exercise.addSet(Set.builder().reps(5).lbs(135).build());
-        exercise.addSet(Set.builder().reps(5).lbs(135).build());
-
-        exerciseService.save(exercise, "asdf");
-
-        exercise.getSets().forEach(set -> {
-            assertNotNull(set.getExercise());
-            assertNotNull(set.getCreated());
-            assertNotNull(set.getUpdated());
-        });
-    }
-
-    @Test
-    public void saveExistingSet() {
-        Exercise exercise = Exercise.builder().name("Bench Press").build();
-
-        Set set1 = spy(Set.builder().build());
-        Set set2 = spy(Set.builder().build());
-
-        exercise.addSet(set1);
-        exercise.addSet(set2);
-
-        when(setRepositoryMock.findById(any())).thenReturn(Optional.of(Set.builder().build()));
-
-        exerciseService.save(exercise, "asdf");
-
-        verify(set1, times(0)).setCreated(any());
-        verify(set2, times(0)).setCreated(any());
+        verify(exerciseRepositoryMock).save(any());
     }
 }

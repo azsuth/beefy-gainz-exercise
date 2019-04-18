@@ -1,6 +1,5 @@
 package com.azs.beefygainz.exercise.model;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,6 +26,10 @@ public class BaseEntity {
 
     public BaseEntity(Long id) {
         this.id = id;
+    }
+
+    public boolean isNew() {
+        return getId() < 0;
     }
 
     public Long getId() {

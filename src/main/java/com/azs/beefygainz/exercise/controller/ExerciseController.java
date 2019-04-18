@@ -31,7 +31,7 @@ public class ExerciseController {
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
     public Exercise saveExercise(@RequestHeader("userId") String userId, @RequestBody Exercise exercise) {
-        return exerciseService.save(exercise, userId);
+        return exerciseService.create(exercise, userId);
     }
 
     @PostMapping("/{exerciseId}/sets")

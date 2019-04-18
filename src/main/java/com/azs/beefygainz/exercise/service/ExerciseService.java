@@ -7,5 +7,7 @@ import java.util.List;
 public interface ExerciseService {
     List<Exercise> findAllByUserId(String userId);
 
-    Exercise save(Exercise exercise, String userId);
+    Exercise create(Exercise exercise, String userId);
+
+    Exercise update(Exercise exercise, String userId);
 }

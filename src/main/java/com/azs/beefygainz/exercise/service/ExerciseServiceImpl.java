@@ -1,8 +1,8 @@
 package com.azs.beefygainz.exercise.service;
 
+import com.azs.beefygainz.exercise.exception.NoSuchExerciseException;
 import com.azs.beefygainz.exercise.model.Exercise;
 import com.azs.beefygainz.exercise.repository.ExerciseRepository;
-import com.azs.beefygainz.exercise.repository.SetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +14,10 @@ import java.util.List;
 public class ExerciseServiceImpl implements ExerciseService {
 
     private final ExerciseRepository exerciseRepository;
-    private final SetRepository setRepository;
 
     @Autowired
-    public ExerciseServiceImpl(ExerciseRepository exerciseRepository, SetRepository setRepository) {
+    public ExerciseServiceImpl(ExerciseRepository exerciseRepository) {
         this.exerciseRepository = exerciseRepository;
-        this.setRepository = setRepository;
     }
 
     @Override
@@ -32,22 +30,27 @@ public class ExerciseServiceImpl implements ExerciseService {
     }
 
     @Override
-    public Exercise save(Exercise exercise, String userId) {
-        if (exercise.getId() == null || !exerciseRepository.findById(exercise.getId()).isPresent()) {
-            exercise.setUserId(userId);
+    public Exercise create(Exercise exercise, String userId) {
+        if (exercise.isNew()) {
             exercise.setCreated(LocalDateTime.now());
+            exercise.setUpdated(LocalDateTime.now());
+            exercise.setUserId(userId);
+
+            return exerciseRepository.save(exercise);
+        } else {
+            return update(exercise, userId);
         }
+    }
 
-        exercise.setUpdated(LocalDateTime.now());
+    @Override
+    public Exercise update(Exercise exercise, String userId) {
+        Exercise savedExercise = exerciseRepository.findByIdAndUserId(exercise.getId(), userId)
+                .orElseThrow(() -> new NoSuchExerciseException(exercise.getId()));
 
-        exercise.getSets().forEach(set -> {
-            if (!setRepository.findById(set.getId()).isPresent()) {
-                set.setCreated(LocalDateTime.now());
-            }
+        savedExercise.setName(exercise.getName());
+        savedExercise.setNotes(exercise.getNotes());
+        savedExercise.setUpdated(LocalDateTime.now());
 
-            set.setUpdated(LocalDateTime.now());
-        });
-
-        return exerciseRepository.save(exercise);
+        return exerciseRepository.save(savedExercise);
     }
 }
