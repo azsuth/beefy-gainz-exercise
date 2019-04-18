@@ -2,8 +2,9 @@ package com.azs.beefygainz.exercise.model;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.Lob;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Setter
 @Getter
@@ -18,4 +19,12 @@ public class Exercise extends BaseEntity {
 
     @Lob
     private String notes;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "exercise")
+    private List<Set> sets = new ArrayList<>();
+
+    public void addSet(Set set) {
+        set.setExercise(this);
+        sets.add(set);
+    }
 }
