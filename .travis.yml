@@ -1,5 +1,14 @@
+sudo: required
 language: java
 jdk: openjdk8
+
+services:
+        - docker
+
+env:
+        global:
+                - SHA=$(git rev-parse HEAD)
+
 
 before_cache:
         - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -11,3 +20,9 @@ cache:
 
 script:
         - ./gradlew clean build
+
+after_success:
+        - docker image build -t azsuth/beefy-gainz-exercise:latest -t azsuth/beefy-gainz-exercise:$SHA .
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        - docker push azsuth/beefy-gainz-exercise:latest
+        - docker push azsuth/beefy-gainz-exercise:$SHA
