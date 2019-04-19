@@ -1,9 +1,7 @@
 package com.azs.beefygainz.exercise.controller;
 
 import com.azs.beefygainz.exercise.model.Exercise;
-import com.azs.beefygainz.exercise.model.Set;
 import com.azs.beefygainz.exercise.service.ExerciseService;
-import com.azs.beefygainz.exercise.service.SetService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -16,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.azs.beefygainz.exercise.ExerciseApplicationTests.asJsonString;
-import static junit.framework.TestCase.fail;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.*;
@@ -24,7 +21,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ExerciseControllerTest {
 
@@ -35,8 +33,6 @@ public class ExerciseControllerTest {
 
     @Mock
     ExerciseService exerciseServiceMock;
-    @Mock
-    SetService setServiceMock;
 
     @InjectMocks
     ExerciseController exerciseController;
@@ -51,7 +47,7 @@ public class ExerciseControllerTest {
     }
 
     @Test
-    public void getExercises() throws Exception {
+    public void get() throws Exception {
         List<Exercise> exercises = new ArrayList<>();
         exercises.add(Exercise.builder().name(EXERCISE_NAME).build());
         exercises.add(Exercise.builder().name("Squats").build());
@@ -68,7 +64,7 @@ public class ExerciseControllerTest {
     }
 
     @Test
-    public void createExercise() throws Exception {
+    public void create() throws Exception {
         Exercise mockExercise = Exercise.builder().name(EXERCISE_NAME).build();
 
         when(exerciseServiceMock.create(any(), any())).thenReturn(mockExercise);
@@ -84,7 +80,7 @@ public class ExerciseControllerTest {
     }
 
     @Test
-    public void updateExercise() throws Exception {
+    public void update() throws Exception {
         Exercise exercise = Exercise.builder().id(EXERCISE_ID).name(EXERCISE_NAME).notes(EXERCISE_NOTES).build();
 
         when(exerciseServiceMock.update(any(), any(), any())).thenReturn(exercise);

@@ -1,9 +1,7 @@
 package com.azs.beefygainz.exercise.controller;
 
 import com.azs.beefygainz.exercise.model.Exercise;
-import com.azs.beefygainz.exercise.model.Set;
 import com.azs.beefygainz.exercise.service.ExerciseService;
-import com.azs.beefygainz.exercise.service.SetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -15,32 +13,32 @@ import java.util.List;
 public class ExerciseController {
 
     private final ExerciseService exerciseService;
-    private final SetService setService;
 
     @Autowired
-    public ExerciseController(ExerciseService exerciseService, SetService setService) {
+    public ExerciseController(ExerciseService exerciseService) {
         this.exerciseService = exerciseService;
-        this.setService = setService;
     }
 
     @GetMapping("")
-    public List<Exercise> getExercises(@RequestHeader("userId") String userId) {
+    public List<Exercise> get(@RequestHeader("userId") String userId) {
         return exerciseService.findAllByUserId(userId);
     }
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
-    public Exercise createExercise(@RequestHeader("userId") String userId, @RequestBody Exercise exercise) {
+    public Exercise create(@RequestHeader("userId") String userId, @RequestBody Exercise exercise) {
         return exerciseService.create(exercise, userId);
     }
 
     @PutMapping("/{exerciseId}")
-    public Exercise updateExercise(@RequestHeader("userId") String userId, @PathVariable Long exerciseId, @RequestBody Exercise exercise) {
+    public Exercise update(@RequestHeader("userId") String userId,
+                           @PathVariable Long exerciseId,
+                           @RequestBody Exercise exercise) {
         return exerciseService.update(exerciseId, exercise, userId);
     }
 
     @DeleteMapping("/{exerciseId}")
-    public void deleteExercise(@RequestHeader("userId") String userId, @PathVariable Long exerciseId) {
+    public void delete(@RequestHeader("userId") String userId, @PathVariable Long exerciseId) {
         exerciseService.delete(exerciseId, userId);
     }
 }
