@@ -10,6 +10,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(callSuper = true)
 @Entity
 public class Exercise extends BaseEntity {
 

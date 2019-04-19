@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,6 +16,7 @@ import java.util.Optional;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 @MappedSuperclass
 public class BaseEntity {
 

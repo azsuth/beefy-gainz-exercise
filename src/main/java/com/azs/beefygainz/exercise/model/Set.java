@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(callSuper = true)
 @Entity
 public class Set extends BaseEntity {
 
