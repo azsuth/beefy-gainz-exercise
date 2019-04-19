@@ -47,7 +47,7 @@ public class ExerciseControllerTest {
     }
 
     @Test
-    public void get() throws Exception {
+    public void getExercises() throws Exception {
         List<Exercise> exercises = new ArrayList<>();
         exercises.add(Exercise.builder().name(EXERCISE_NAME).build());
         exercises.add(Exercise.builder().name("Squats").build());
