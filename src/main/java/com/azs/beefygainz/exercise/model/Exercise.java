@@ -1,5 +1,6 @@
 package com.azs.beefygainz.exercise.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -15,6 +16,8 @@ import java.util.List;
 public class Exercise extends BaseEntity {
 
     private String name;
+
+    @JsonIgnore
     private String userId;
 
     @Lob
