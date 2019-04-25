@@ -76,6 +76,18 @@ public class ExerciseServiceImplTest {
         verify(exerciseServiceSpy).update(eq(EXERCISE_ID), eq(exercise), eq(USER_ID));
     }
 
+    @Test
+    public void create_createsSet() {
+        Exercise exerciseSpy = spy(Exercise.builder().build());
+
+        when(exerciseRepositoryMock.save(any())).thenReturn(exerciseSpy);
+
+        Exercise exercise = exerciseService.create(exerciseSpy, USER_ID);
+
+        assertEquals(1, exercise.getSets().size());
+        verify(exerciseSpy).addSet(any());
+    }
+
     @Test(expected = NoSuchExerciseException.class)
     public void update_exerciseDoesntExist() {
         Exercise exercise = Exercise.builder().userId(USER_ID).build();

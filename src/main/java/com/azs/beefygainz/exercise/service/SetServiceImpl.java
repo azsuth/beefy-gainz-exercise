@@ -30,6 +30,13 @@ public class SetServiceImpl implements SetService {
             set.setUpdated(LocalDateTime.now());
             set.setExercise(savedExercise);
 
+            if (savedExercise.getSets().size() > 0) {
+                Set lastSet = savedExercise.getSets().get(savedExercise.getSets().size() - 1);
+
+                set.setLbs(lastSet.getLbs());
+                set.setReps(lastSet.getReps());
+            }
+
             return setRepository.save(set);
         } else {
             return update(set.getId(), set, savedExercise);

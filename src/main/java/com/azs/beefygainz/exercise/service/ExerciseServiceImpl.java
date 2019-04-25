@@ -2,6 +2,7 @@ package com.azs.beefygainz.exercise.service;
 
 import com.azs.beefygainz.exercise.exception.NoSuchExerciseException;
 import com.azs.beefygainz.exercise.model.Exercise;
+import com.azs.beefygainz.exercise.model.Set;
 import com.azs.beefygainz.exercise.repository.ExerciseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,8 @@ public class ExerciseServiceImpl implements ExerciseService {
             exercise.setCreated(LocalDateTime.now());
             exercise.setUpdated(LocalDateTime.now());
             exercise.setUserId(userId);
+
+            exercise.addSet(Set.builder().build());
 
             return exerciseRepository.save(exercise);
         } else {

@@ -1,10 +1,8 @@
 package com.azs.beefygainz.exercise.service;
 
-import com.azs.beefygainz.exercise.exception.NoSuchExerciseException;
 import com.azs.beefygainz.exercise.exception.NoSuchSetException;
 import com.azs.beefygainz.exercise.model.Exercise;
 import com.azs.beefygainz.exercise.model.Set;
-import com.azs.beefygainz.exercise.repository.ExerciseRepository;
 import com.azs.beefygainz.exercise.repository.SetRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,9 +10,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -68,6 +67,26 @@ public class SetServiceImplTest {
         setServiceSpy.create(set, EXERCISE_ID, USER_ID);
 
         verify(setServiceSpy).update(eq(SET_ID), eq(set), eq(exercise));
+    }
+
+    @Test
+    public void create_defaultsLastRepsAndLbs() {
+        List<Set> sets = new ArrayList<>();
+        sets.add(Set.builder().lbs(135).reps(12).build());
+        sets.add(Set.builder().lbs(205).reps(4).build());
+        Exercise exercise = Exercise.builder().sets(sets).build();
+
+        Set setSpy = spy(Set.builder().build());
+
+        when(exerciseService.getSavedExercise(any(), any())).thenReturn(exercise);
+        when(setRepositoryMock.save(any())).thenReturn(setSpy);
+
+        Set set = setService.create(setSpy, EXERCISE_ID, USER_ID);
+
+        assertEquals(4, set.getReps());
+        assertEquals(205, set.getLbs());
+        verify(setSpy).setReps(eq(4));
+        verify(setSpy).setLbs(eq(205));
     }
 
     @Test
