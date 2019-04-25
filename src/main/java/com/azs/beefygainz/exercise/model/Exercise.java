@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,8 +28,8 @@ public class Exercise extends BaseEntity {
     private List<Set> sets = new ArrayList<>();
 
     @Builder
-    public Exercise(Long id, String name, String userId, String notes, List<Set> sets) {
-        super(id);
+    public Exercise(Long id, LocalDateTime created, String name, String userId, String notes, List<Set> sets) {
+        super(id, created);
         this.name = name;
         this.userId = userId;
         this.notes = notes;

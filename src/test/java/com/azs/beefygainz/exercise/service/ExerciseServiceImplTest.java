@@ -2,17 +2,19 @@ package com.azs.beefygainz.exercise.service;
 
 import com.azs.beefygainz.exercise.exception.NoSuchExerciseException;
 import com.azs.beefygainz.exercise.model.Exercise;
+import com.azs.beefygainz.exercise.model.Set;
 import com.azs.beefygainz.exercise.repository.ExerciseRepository;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -27,26 +29,52 @@ public class ExerciseServiceImplTest {
     @Mock
     ExerciseRepository exerciseRepositoryMock;
 
-    @InjectMocks
     ExerciseServiceImpl exerciseService;
 
     @Before
     public void setUp() {
         initMocks(this);
+
+        this.exerciseService = new ExerciseServiceImpl(exerciseRepositoryMock, 4);
     }
 
     @Test
-    public void findAllByUserId() {
+    public void getAll() {
         List<Exercise> mockExercises = new ArrayList<>();
         mockExercises.add(Exercise.builder().build());
         mockExercises.add(Exercise.builder().build());
 
         when(exerciseRepositoryMock.findAllByUserId(anyString())).thenReturn(mockExercises);
 
-        List<Exercise> exercises = exerciseService.findAllByUserId(USER_ID);
+        List<Exercise> exercises = exerciseService.getAll(USER_ID, false);
 
         assertEquals(2, exercises.size());
         verify(exerciseRepositoryMock).findAllByUserId(USER_ID);
+    }
+
+    @Test
+    public void getAll_current() {
+        Exercise benchPress = Exercise.builder().build();
+        benchPress.addSet(Set.builder().created(LocalDateTime.now().minusDays(1)).build());
+        benchPress.addSet(Set.builder().created(LocalDateTime.now().minusHours(5)).build());
+        benchPress.addSet(Set.builder().created(LocalDateTime.now().minusHours(2)).build());
+
+        Exercise squats = Exercise.builder().build();
+        squats.addSet(Set.builder().created(LocalDateTime.now().minusDays(1)).build());
+        squats.addSet(Set.builder().created(LocalDateTime.now().minusMinutes(35)).build());
+        squats.addSet(Set.builder().created(LocalDateTime.now().minusMinutes(30)).build());
+
+        List<Exercise> mockExercises = new ArrayList<>();
+        mockExercises.add(benchPress);
+        mockExercises.add(squats);
+
+        when(exerciseRepositoryMock.findAllCurrentByUserId(any(), any())).thenReturn(mockExercises);
+
+        List<Exercise> exercises = exerciseService.getAll(USER_ID, true);
+
+        assertEquals(1, exercises.get(0).getSets().size());
+        assertEquals(2, exercises.get(1).getSets().size());
+        verify(exerciseRepositoryMock).findAllCurrentByUserId(eq(USER_ID), any());
     }
 
     @Test

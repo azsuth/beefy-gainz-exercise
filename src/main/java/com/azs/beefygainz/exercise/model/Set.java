@@ -6,12 +6,13 @@ import lombok.*;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import java.time.LocalDateTime;
 
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(callSuper = true)
+@ToString(callSuper = true, exclude = { "exercise" })
 @Entity
 public class Set extends BaseEntity {
 
@@ -24,8 +25,8 @@ public class Set extends BaseEntity {
     private String notes;
 
     @Builder
-    public Set(Long id, Exercise exercise, int reps, int lbs, String notes) {
-        super(id);
+    public Set(Long id, LocalDateTime created, Exercise exercise, int reps, int lbs, String notes) {
+        super(id, created);
         this.exercise = exercise;
         this.reps = reps;
         this.lbs = lbs;

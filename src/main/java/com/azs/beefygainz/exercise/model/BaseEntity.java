@@ -27,8 +27,9 @@ public class BaseEntity {
     private LocalDateTime created;
     private LocalDateTime updated;
 
-    public BaseEntity(Long id) {
+    public BaseEntity(Long id, LocalDateTime created) {
         this.id = id;
+        this.created = created;
     }
 
     @JsonIgnore

@@ -20,8 +20,8 @@ public class ExerciseController {
     }
 
     @GetMapping("")
-    public List<Exercise> get(@RequestHeader("userId") String userId) {
-        return exerciseService.findAllByUserId(userId);
+    public List<Exercise> get(@RequestHeader("userId") String userId, @RequestParam(required = false) boolean current) {
+        return exerciseService.getAll(userId, current);
     }
 
     @PostMapping("")

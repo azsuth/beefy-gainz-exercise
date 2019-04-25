@@ -5,6 +5,7 @@ import com.azs.beefygainz.exercise.model.Exercise;
 import com.azs.beefygainz.exercise.model.Set;
 import com.azs.beefygainz.exercise.repository.ExerciseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -15,17 +16,30 @@ import java.util.List;
 public class ExerciseServiceImpl implements ExerciseService {
 
     private final ExerciseRepository exerciseRepository;
+    private final int workoutDuration;
 
     @Autowired
-    public ExerciseServiceImpl(ExerciseRepository exerciseRepository) {
+    public ExerciseServiceImpl(ExerciseRepository exerciseRepository,
+                               @Value("${workout.duration:4}") int workoutDuration) {
         this.exerciseRepository = exerciseRepository;
+        this.workoutDuration = workoutDuration;
     }
 
     @Override
-    public List<Exercise> findAllByUserId(String userId) {
+    public List<Exercise> getAll(String userId, boolean current) {
         List<Exercise> exercises = new ArrayList<>();
 
-        exerciseRepository.findAllByUserId(userId).forEach(exercises::add);
+        if (current) {
+            LocalDateTime workoutStart = LocalDateTime.now().minusHours(workoutDuration);
+
+            exerciseRepository.findAllCurrentByUserId(userId, workoutStart)
+                    .forEach(exercise -> {
+                        exercise.getSets().removeIf(set -> set.getCreated().isBefore(workoutStart));
+                        exercises.add(exercise);
+                    });
+        } else {
+            exerciseRepository.findAllByUserId(userId).forEach(exercises::add);
+        }
 
         return exercises;
     }
