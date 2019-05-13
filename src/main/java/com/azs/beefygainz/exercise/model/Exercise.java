@@ -24,7 +24,7 @@ public class Exercise extends BaseEntity {
     @Lob
     private String notes;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "exercise")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "exercise", fetch = FetchType.EAGER)
     private List<Set> sets = new ArrayList<>();
 
     @Builder

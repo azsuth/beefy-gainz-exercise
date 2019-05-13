@@ -26,6 +26,15 @@ public class ExerciseServiceImpl implements ExerciseService {
     }
 
     @Override
+    public List<Exercise> getAll() {
+        List<Exercise> exercises = new ArrayList<>();
+
+        exerciseRepository.findAll().forEach(exercises::add);
+
+        return exercises;
+    }
+
+    @Override
     public List<Exercise> getAll(String userId, boolean current) {
         List<Exercise> exercises = new ArrayList<>();
 
