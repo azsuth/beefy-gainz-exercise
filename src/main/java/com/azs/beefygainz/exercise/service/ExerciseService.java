@@ -7,7 +7,7 @@ import java.util.List;
 public interface ExerciseService {
     List<Exercise> getAll();
 
-    List<Exercise> getAll(String userId, boolean current);
+    List<Exercise> getAll(String userId, boolean current, String search);
 
     Exercise create(Exercise exercise, String userId);
 

@@ -35,7 +35,7 @@ public class ExerciseServiceImpl implements ExerciseService {
     }
 
     @Override
-    public List<Exercise> getAll(String userId, boolean current) {
+    public List<Exercise> getAll(String userId, boolean current, String search) {
         List<Exercise> exercises = new ArrayList<>();
 
         if (current) {
@@ -46,6 +46,8 @@ public class ExerciseServiceImpl implements ExerciseService {
                         exercise.getSets().removeIf(set -> set.getCreated().isBefore(workoutStart));
                         exercises.add(exercise);
                     });
+        } else if (search != null) {
+            exerciseRepository.findAllByUserIdAndNameContainingIgnoreCase(userId, search).forEach(exercises::add);
         } else {
             exerciseRepository.findAllByUserId(userId).forEach(exercises::add);
         }

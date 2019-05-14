@@ -45,16 +45,19 @@ public class ExerciseRepositoryIntegrationTest {
 
         squat.addSet(Set.builder().lbs(155).reps(6).created(LocalDateTime.now().minusMinutes(30)).build());
 
+        Exercise pullups = Exercise.builder().name("Pullups").notes("Notes 4").userId("asdf").build();
+
         exerciseRepository.save(benchPress);
         exerciseRepository.save(latPulldown);
         exerciseRepository.save(squat);
+        exerciseRepository.save(pullups);
     }
 
     @Test
     public void findAllByUserId() {
         Iterable<Exercise> exercises = exerciseRepository.findAllByUserId("asdf");
 
-        assertEquals(2, StreamSupport.stream(exercises.spliterator(), false).count());
+        assertEquals(3, StreamSupport.stream(exercises.spliterator(), false).count());
         exercises.forEach(exercise -> {
             assertEquals("asdf", exercise.getUserId());
         });
@@ -73,6 +76,13 @@ public class ExerciseRepositoryIntegrationTest {
     @Test
     public void findAllCurrentByUserId() {
         Iterable<Exercise> exercises = exerciseRepository.findAllCurrentByUserId("asdf", LocalDateTime.now().minusDays(1));
+
+        assertEquals(2, StreamSupport.stream(exercises.spliterator(), false).count());
+    }
+
+    @Test
+    public void findAllByUserIdAndNameContaining() {
+        Iterable<Exercise> exercises = exerciseRepository.findAllByUserIdAndNameContainingIgnoreCase("asdf", "pull");
 
         assertEquals(2, StreamSupport.stream(exercises.spliterator(), false).count());
     }

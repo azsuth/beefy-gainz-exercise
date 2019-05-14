@@ -47,7 +47,7 @@ public class ExerciseServiceImplTest {
 
         when(exerciseRepositoryMock.findAllByUserId(anyString())).thenReturn(mockExercises);
 
-        List<Exercise> exercises = exerciseService.getAll(USER_ID, false);
+        List<Exercise> exercises = exerciseService.getAll(USER_ID, false, null);
 
         assertEquals(2, exercises.size());
         verify(exerciseRepositoryMock).findAllByUserId(USER_ID);
@@ -71,11 +71,20 @@ public class ExerciseServiceImplTest {
 
         when(exerciseRepositoryMock.findAllCurrentByUserId(any(), any())).thenReturn(mockExercises);
 
-        List<Exercise> exercises = exerciseService.getAll(USER_ID, true);
+        List<Exercise> exercises = exerciseService.getAll(USER_ID, true, null);
 
         assertEquals(1, exercises.get(0).getSets().size());
         assertEquals(2, exercises.get(1).getSets().size());
         verify(exerciseRepositoryMock).findAllCurrentByUserId(eq(USER_ID), any());
+    }
+
+    @Test
+    public void getAll_searchTerm() {
+        when(exerciseRepositoryMock.findAllByUserIdAndNameContainingIgnoreCase(any(), any())).thenReturn(new ArrayList<>());
+
+        exerciseService.getAll(USER_ID, false, "pull");
+
+        verify(exerciseRepositoryMock).findAllByUserIdAndNameContainingIgnoreCase(eq(USER_ID), eq("pull"));
     }
 
     @Test

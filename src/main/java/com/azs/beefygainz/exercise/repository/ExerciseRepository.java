@@ -17,4 +17,6 @@ public interface ExerciseRepository extends CrudRepository<Exercise, Long> {
             "SELECT DISTINCT e FROM Exercise e JOIN FETCH e.sets s WHERE e.userId = :userId AND s.created > :created"
     )
     Iterable<Exercise> findAllCurrentByUserId(@Param("userId") String userId, @Param("created") LocalDateTime created);
+
+    Iterable<Exercise> findAllByUserIdAndNameContainingIgnoreCase(String userId, String search);
 }

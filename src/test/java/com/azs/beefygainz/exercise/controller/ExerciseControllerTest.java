@@ -52,7 +52,7 @@ public class ExerciseControllerTest {
         exercises.add(Exercise.builder().name(EXERCISE_NAME).build());
         exercises.add(Exercise.builder().name("Squats").build());
 
-        when(exerciseServiceMock.getAll(anyString(), anyBoolean())).thenReturn(exercises);
+        when(exerciseServiceMock.getAll(anyString(), anyBoolean(), eq(null))).thenReturn(exercises);
 
         mockMvc.perform(get("/exercises").header("userId", USER_ID))
                 .andExpect(status().isOk())
@@ -60,7 +60,7 @@ public class ExerciseControllerTest {
                 .andExpect(jsonPath("$[0].name", is(EXERCISE_NAME)))
                 .andExpect(jsonPath("$[1].name", is("Squats")));
 
-        verify(exerciseServiceMock).getAll(eq(USER_ID), eq(false));
+        verify(exerciseServiceMock).getAll(eq(USER_ID), eq(false), eq(null));
     }
 
     @Test
@@ -69,7 +69,16 @@ public class ExerciseControllerTest {
                 .header("userId", USER_ID))
                 .andExpect(status().isOk());
 
-        verify(exerciseServiceMock).getAll(eq(USER_ID), eq(true));
+        verify(exerciseServiceMock).getAll(eq(USER_ID), eq(true), eq(null));
+    }
+
+    @Test
+    public void getExercises_searchTerm() throws Exception {
+        mockMvc.perform(get("/exercises?search=pull")
+                .header("userId", USER_ID))
+                .andExpect(status().isOk());
+
+        verify(exerciseServiceMock).getAll(eq(USER_ID), eq(false), eq("pull"));
     }
 
     @Test
