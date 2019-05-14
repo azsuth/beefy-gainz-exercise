@@ -60,7 +60,11 @@ public class ExerciseServiceImpl implements ExerciseService {
             exercise.setUpdated(LocalDateTime.now());
             exercise.setUserId(userId);
 
-            exercise.addSet(Set.builder().build());
+            Set defaultSet = new Set();
+            defaultSet.setCreated(LocalDateTime.now());
+            defaultSet.setUpdated(LocalDateTime.now());
+
+            exercise.addSet(defaultSet);
 
             return exerciseRepository.save(exercise);
         } else {

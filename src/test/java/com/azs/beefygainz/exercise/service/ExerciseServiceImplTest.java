@@ -6,6 +6,7 @@ import com.azs.beefygainz.exercise.model.Set;
 import com.azs.beefygainz.exercise.repository.ExerciseRepository;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 
 import java.time.LocalDateTime;
@@ -113,7 +114,14 @@ public class ExerciseServiceImplTest {
         Exercise exercise = exerciseService.create(exerciseSpy, USER_ID);
 
         assertEquals(1, exercise.getSets().size());
-        verify(exerciseSpy).addSet(any());
+
+        ArgumentCaptor<Set> setCaptor = ArgumentCaptor.forClass(Set.class);
+        verify(exerciseSpy).addSet(setCaptor.capture());
+
+        Set set = setCaptor.getValue();
+
+        assertNotNull(set.getCreated());
+        assertNotNull(set.getUpdated());
     }
 
     @Test(expected = NoSuchExerciseException.class)
