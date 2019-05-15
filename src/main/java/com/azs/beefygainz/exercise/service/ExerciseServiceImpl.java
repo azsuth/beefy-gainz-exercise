@@ -46,6 +46,17 @@ public class ExerciseServiceImpl implements ExerciseService {
                         exercise.getSets().removeIf(set -> set.getCreated().isBefore(workoutStart));
                         exercises.add(exercise);
                     });
+
+            exercises.sort((exercise1, exercise2) -> {
+                Set set1 = exercise1.getSets().get(exercise1.getSets().size() - 1);
+                Set set2 = exercise2.getSets().get(exercise2.getSets().size() - 1);
+
+                if (set1.getCreated().isEqual(set2.getCreated())) {
+                    return 0;
+                }
+
+                return set1.getCreated().isBefore(set2.getCreated()) ? 1 : -1;
+            });
         } else if (search != null) {
             exerciseRepository.findAllByUserIdAndNameContainingIgnoreCase(userId, search).forEach(exercises::add);
         } else {

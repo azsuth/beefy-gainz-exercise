@@ -55,12 +55,12 @@ public class ExerciseServiceImplTest {
 
     @Test
     public void getAll_current() {
-        Exercise benchPress = Exercise.builder().build();
+        Exercise benchPress = Exercise.builder().name("Bench Press").build();
         benchPress.addSet(Set.builder().created(LocalDateTime.now().minusDays(1)).build());
         benchPress.addSet(Set.builder().created(LocalDateTime.now().minusHours(5)).build());
         benchPress.addSet(Set.builder().created(LocalDateTime.now().minusHours(2)).build());
 
-        Exercise squats = Exercise.builder().build();
+        Exercise squats = Exercise.builder().name("Squats").build();
         squats.addSet(Set.builder().created(LocalDateTime.now().minusDays(1)).build());
         squats.addSet(Set.builder().created(LocalDateTime.now().minusMinutes(35)).build());
         squats.addSet(Set.builder().created(LocalDateTime.now().minusMinutes(30)).build());
@@ -73,8 +73,10 @@ public class ExerciseServiceImplTest {
 
         List<Exercise> exercises = exerciseService.getAll(USER_ID, true, null);
 
-        assertEquals(1, exercises.get(0).getSets().size());
-        assertEquals(2, exercises.get(1).getSets().size());
+        assertEquals("Squats", exercises.get(0).getName());
+        assertEquals("Bench Press", exercises.get(1).getName());
+        assertEquals(2, exercises.get(0).getSets().size());
+        assertEquals(1, exercises.get(1).getSets().size());
         verify(exerciseRepositoryMock).findAllCurrentByUserId(eq(USER_ID), any());
     }
 
