@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
-@Profile({ "default", "dev" })
+@Profile({ "dev" })
 public class Dataloader implements CommandLineRunner {
 
     private final ExerciseService exerciseService;
