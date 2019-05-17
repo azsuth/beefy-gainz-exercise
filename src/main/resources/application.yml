@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    hikari:
+      connectionTimeout: 20000
+      maximumPoolSize: 5
+  jpa:
+    hibernate:
+      ddl-auto: validate
+      show-sql: true
+    # properties:
+    #   javax:
+    #     persistence:
+    #       schema-generation:
+    #         create-source: metadata
+    #         scripts:
+    #           action: create
+    #           create-target: create.sql
