@@ -27,7 +27,10 @@ spec:
             - name: SPRING_DATASOURCE_USERNAME
               value: exercise_user
             - name: SPRING_DATASOURCE_PASSWORD
-              value: exercise_temp_password
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-exercise-user-password
+                  key: password
             - name: WORKOUT_DURATION
               value: '4'
 
