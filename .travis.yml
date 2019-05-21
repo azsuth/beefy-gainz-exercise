@@ -36,5 +36,9 @@ after_success:
   - docker image build -t azsuth/beefy-gainz-exercise:latest -t azsuth/beefy-gainz-exercise:$SHA .
   - docker push azsuth/beefy-gainz-exercise:latest
   - docker push azsuth/beefy-gainz-exercise:$SHA
-  - kubectl apply -f k8s.yml
-  - kubectl set image deployments/exercise-deployment exercise=azsuth/beefy-gainz-exercise:$SHA
+
+deploy:
+  provider: script
+  script: bash ./deploy.sh
+  on:
+    branch: master  
