@@ -61,7 +61,12 @@ public class SetServiceImpl implements SetService {
 
     @Override
     public void delete(Long setId, Long exerciseId, String userId) {
-        setRepository.delete(getSavedSet(setId, exerciseService.getSavedExercise(exerciseId, userId)));
+        Exercise exercise = exerciseService.getSavedExercise(exerciseId, userId);
+        Set set = getSavedSet(setId, exercise);
+
+        exercise.getSets().removeIf(s -> s.getId().equals(set.getId()));
+
+        setRepository.delete(set);
     }
 
     public Set getSavedSet(Long setId, Exercise exercise) {

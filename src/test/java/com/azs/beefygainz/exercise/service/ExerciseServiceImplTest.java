@@ -56,14 +56,14 @@ public class ExerciseServiceImplTest {
     @Test
     public void getAll_current() {
         Exercise benchPress = Exercise.builder().name("Bench Press").build();
-        benchPress.addSet(Set.builder().created(LocalDateTime.now().minusDays(1)).build());
-        benchPress.addSet(Set.builder().created(LocalDateTime.now().minusHours(5)).build());
-        benchPress.addSet(Set.builder().created(LocalDateTime.now().minusHours(2)).build());
+        benchPress.addSet(Set.builder().id(1L).created(LocalDateTime.now().minusDays(1)).build());
+        benchPress.addSet(Set.builder().id(2L).created(LocalDateTime.now().minusHours(5)).build());
+        benchPress.addSet(Set.builder().id(3L).created(LocalDateTime.now().minusHours(2)).build());
 
         Exercise squats = Exercise.builder().name("Squats").build();
-        squats.addSet(Set.builder().created(LocalDateTime.now().minusDays(1)).build());
-        squats.addSet(Set.builder().created(LocalDateTime.now().minusMinutes(35)).build());
-        squats.addSet(Set.builder().created(LocalDateTime.now().minusMinutes(30)).build());
+        squats.addSet(Set.builder().id(4L).created(LocalDateTime.now().minusDays(1)).build());
+        squats.addSet(Set.builder().id(5L).created(LocalDateTime.now().minusMinutes(35)).build());
+        squats.addSet(Set.builder().id(6L).created(LocalDateTime.now().minusMinutes(30)).build());
 
         List<Exercise> mockExercises = new ArrayList<>();
         mockExercises.add(benchPress);
@@ -77,6 +77,8 @@ public class ExerciseServiceImplTest {
         assertEquals("Bench Press", exercises.get(1).getName());
         assertEquals(2, exercises.get(0).getSets().size());
         assertEquals(1, exercises.get(1).getSets().size());
+        assertEquals(Long.valueOf(6), exercises.get(0).getSets().get(0).getId());
+        assertEquals(Long.valueOf(5), exercises.get(0).getSets().get(1).getId());
         verify(exerciseRepositoryMock).findAllCurrentByUserId(eq(USER_ID), any());
     }
 

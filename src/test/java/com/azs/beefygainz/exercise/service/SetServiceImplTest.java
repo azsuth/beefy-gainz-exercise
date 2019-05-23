@@ -30,7 +30,7 @@ public class SetServiceImplTest {
     @Mock
     SetRepository setRepositoryMock;
     @Mock
-    ExerciseService exerciseService;
+    ExerciseService exerciseServiceMock;
 
     @InjectMocks
     SetServiceImpl setService;
@@ -44,7 +44,7 @@ public class SetServiceImplTest {
     public void create() {
         Set setSpy = spy(Set.builder().build());
 
-        when(exerciseService.getSavedExercise(any(), any())).thenReturn(Exercise.builder().id(EXERCISE_ID).build());
+        when(exerciseServiceMock.getSavedExercise(any(), any())).thenReturn(Exercise.builder().id(EXERCISE_ID).build());
         when(setRepositoryMock.save(any())).thenReturn(setSpy);
 
         Set set = setService.create(setSpy, EXERCISE_ID, USER_ID);
@@ -61,7 +61,7 @@ public class SetServiceImplTest {
         Exercise exercise = Exercise.builder().build();
         SetServiceImpl setServiceSpy = spy(setService);
 
-        when(exerciseService.getSavedExercise(any(), any())).thenReturn(exercise);
+        when(exerciseServiceMock.getSavedExercise(any(), any())).thenReturn(exercise);
         when(setRepositoryMock.findByIdAndExercise(any(), any())).thenReturn(Optional.of(Set.builder().build()));
 
         setServiceSpy.create(set, EXERCISE_ID, USER_ID);
@@ -78,7 +78,7 @@ public class SetServiceImplTest {
 
         Set setSpy = spy(Set.builder().build());
 
-        when(exerciseService.getSavedExercise(any(), any())).thenReturn(exercise);
+        when(exerciseServiceMock.getSavedExercise(any(), any())).thenReturn(exercise);
         when(setRepositoryMock.save(any())).thenReturn(setSpy);
 
         Set set = setService.create(setSpy, EXERCISE_ID, USER_ID);
@@ -95,13 +95,13 @@ public class SetServiceImplTest {
         Exercise exercise = Exercise.builder().build();
         SetServiceImpl setServiceSpy = spy(setService);
 
-        when(exerciseService.getSavedExercise(any(), any())).thenReturn(exercise);
+        when(exerciseServiceMock.getSavedExercise(any(), any())).thenReturn(exercise);
         when(setRepositoryMock.findByIdAndExercise(any(), any())).thenReturn(Optional.of(Set.builder().build()));
 
         setServiceSpy.update(SET_ID, set, EXERCISE_ID, USER_ID);
 
         verify(setServiceSpy).update(eq(SET_ID), eq(set), eq(exercise));
-        verify(exerciseService).getSavedExercise(eq(SET_ID), eq(USER_ID));
+        verify(exerciseServiceMock).getSavedExercise(eq(SET_ID), eq(USER_ID));
     }
 
     @Test
@@ -141,11 +141,21 @@ public class SetServiceImplTest {
 
     @Test
     public void delete() {
-        when(setRepositoryMock.findByIdAndExercise(any(), any())).thenReturn(Optional.of(Set.builder().build()));
+        Set set = Set.builder().id(SET_ID).build();
+        List<Set> sets = new ArrayList<>();
+        sets.add(set);
+
+        List<Set> setsSpy = spy(sets);
+        Exercise exercise = Exercise.builder().sets(setsSpy).build();
+
+        when(exerciseServiceMock.getSavedExercise(any(), any())).thenReturn(exercise);
+        when(setRepositoryMock.findByIdAndExercise(any(), any())).thenReturn(Optional.of(set));
 
         setService.delete(SET_ID, EXERCISE_ID, USER_ID);
 
         verify(setRepositoryMock).delete(any());
+        verify(setsSpy).removeIf(any());
+        assertEquals(0, exercise.getSets().size());
     }
 
     @Test
